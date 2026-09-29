@@ -1,0 +1,34 @@
+name: Build installers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Test logic
+        shell: pwsh
+        run: ./scripts/Test.ps1
+      - name: Build installers
+        shell: pwsh
+        run: ./scripts/Build.ps1 -Edition Both
+      - name: Verify installers
+        shell: pwsh
+        run: |
+          $installers = @(Get-ChildItem artifacts/installers -Filter '*.exe' -File)
+          if ($installers.Count -ne 2) { throw "Expected two installers, found $($installers.Count)" }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ClickShow-installers
+          path: artifacts/installers/*.exe
+          if-no-files-found: error
