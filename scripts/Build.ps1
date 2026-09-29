@@ -24,6 +24,7 @@ try {
         dotnet publish $project -c Release -r win-x64 --self-contained $selfContained "-p:WindowsAppSDKSelfContained=$selfContained" -p:PublishSingleFile=false "-p:RestoreConfigFile=$root/NuGet.Config" -o $publish
         if ($LASTEXITCODE) { throw "$item 发布失败" }
         [xml]$csproj = Get-Content $project
+        $appVersion = $csproj.Project.PropertyGroup.Version
         $sdkVersion = ($csproj.Project.ItemGroup.PackageReference | Where-Object Include -eq 'Microsoft.WindowsAppSDK').Version
         $info = Get-Content (Join-Path $env:NUGET_PACKAGES "microsoft.windowsappsdk.runtime/$sdkVersion/WindowsAppSDK-VersionInfo.json") | ConvertFrom-Json
         $runtimeConfig = Get-Content (Join-Path $publish 'ClickShow.runtimeconfig.json') | ConvertFrom-Json
@@ -31,7 +32,7 @@ try {
         $runtimeVersion = $info.Runtime.Version.String
         if (!$runtimeVersion) { throw '未找到 Windows App SDK 实际运行时版本' }
         $metadata = @"
-#define AppVersion "1.0.0"
+#define AppVersion "$appVersion"
 #define Edition "$item"
 #define PublishDir "$publish"
 #define DotNetVersion "$dotnetVersion"

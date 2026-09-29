@@ -25,7 +25,8 @@ internal sealed class SettingsWindow : Window
         this.app = app; Title = "ClickShow 设置";
         SystemBackdrop = new MicaBackdrop();
         var panel = new StackPanel { Spacing = 16, Padding = new Thickness(24), MaxWidth = 1800, HorizontalAlignment = HorizontalAlignment.Stretch };
-        panel.Children.Add(new TextBlock { Text = "ClickShow 1.0.0", FontSize = 30, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        var version = typeof(App).Assembly.GetName().Version!.ToString(3);
+        panel.Children.Add(new TextBlock { Text = $"ClickShow {version}", FontSize = 30, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         var columns = new Grid { ColumnSpacing = 100, RowSpacing = 24 };
         columns.ColumnDefinitions.Add(new() { Width = new GridLength(1, GridUnitType.Star) });
         columns.ColumnDefinitions.Add(new() { Width = new GridLength(1, GridUnitType.Star) });
