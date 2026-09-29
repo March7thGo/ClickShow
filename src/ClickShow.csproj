@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWinUI>true</UseWinUI>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained Condition="'$(WindowsAppSDKSelfContained)' == ''">true</WindowsAppSDKSelfContained>
+    <WindowsAppSdkBootstrapInitialize Condition="'$(WindowsAppSDKSelfContained)' == 'true'">false</WindowsAppSdkBootstrapInitialize>
+    <WindowsAppSdkBootstrapInitialize Condition="'$(WindowsAppSDKSelfContained)' != 'true'">true</WindowsAppSdkBootstrapInitialize>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets/ClickShow.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260804001" />
+    <Content Include="Assets/*.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="PublishWinUIResources" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(TargetDir)$(AssemblyName).pri" RelativePath="$(AssemblyName).pri" CopyToPublishDirectory="PreserveNewest" />
+      <ResolvedFileToPublish Include="$(TargetDir)App.xbf" RelativePath="App.xbf" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+</Project>
